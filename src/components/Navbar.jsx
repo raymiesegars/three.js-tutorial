@@ -20,7 +20,7 @@ const Navbar = () => {
         className='w-10 h-10 rounded-lg bg-white items-center justify-center flex font-bold shadow-md'    >
         <p className="blue-gradient_text">RVS</p>
       </Link>
-      <nav className="flex text-lg gap-7 font-medium">
+      {/* <nav className="flex text-lg gap-7 font-medium">
         <Link
           href="/about"
           className={getLinkClassName("/about")}
@@ -39,7 +39,7 @@ const Navbar = () => {
         >
           Contact
         </Link>
-      </nav>
+      </nav> */}
     </header>
   );
 };

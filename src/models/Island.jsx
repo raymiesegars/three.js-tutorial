@@ -71,9 +71,16 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
 
   const handleKeyDown = useCallback(
     (e) => {
-      if (e.key === "ArrowRight") {
+      if (e.key === "ArrowLeft") {
         if (!isRotating) setIsRotating(true);
-        islandRef.current.rotation.y += 0.01 * Math.PI;
+
+        islandRef.current.rotation.y += 0.005 * Math.PI;
+        rotationSpeed.current = 0.007;
+      } else if (e.key === "ArrowRight") {
+        if (!isRotating) setIsRotating(true);
+
+        islandRef.current.rotation.y -= 0.005 * Math.PI;
+        rotationSpeed.current = -0.007;
       }
     },
     [isRotating, setIsRotating],
@@ -81,11 +88,49 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
 
   const handleKeyUp = useCallback(
     (e) => {
-      if (e.key === "ArrowRight") {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         setIsRotating(false);
       }
     },
     [setIsRotating],
+  );
+
+  const handleTouchStart = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setIsRotating(true);
+
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      lastX.current = clientX;
+    },
+    [setIsRotating],
+  );
+
+  const handleTouchEnd = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setIsRotating(false);
+    },
+    [setIsRotating],
+  );
+
+  const handleTouchMove = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (isRotating) {
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const delta = (clientX - lastX.current) / viewport.width;
+
+        islandRef.current.rotation.y += delta * 0.01 * Math.PI;
+        lastX.current = clientX;
+        rotationSpeed.current = delta * 0.01 * Math.PI;
+      }
+    },
+    [isRotating, viewport.width],
   );
 
   // This function is called on each frame update
@@ -151,6 +196,9 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
     canvas.addEventListener("pointermove", handlePointerMove);
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
+    document.addEventListener("touchstart", handleTouchStart);
+    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("touchmove", handleTouchMove);
 
     return () => {
       canvas.removeEventListener("pointerdown", handlePointerDown);
@@ -158,6 +206,9 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
       canvas.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchmove", handleTouchMove);
     };
   }, [
     gl,
@@ -166,6 +217,9 @@ const Island = ({ isRotating, setIsRotating, setCurrentStage, ...props }) => {
     handlePointerMove,
     handleKeyDown,
     handleKeyUp,
+    handleTouchStart,
+    handleTouchEnd,
+    handleTouchMove,
   ]);
 
   return (

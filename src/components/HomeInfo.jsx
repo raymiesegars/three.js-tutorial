@@ -36,18 +36,18 @@ const renderContent = {
     />
   ),
   3: (
-    <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5">
-      Hi I am <span className="font-semibold">Raymie</span>👋
-      <br />
-      Explore the island to find my information
-    </h1>
+    <InfoBox
+      text="My LinkedIn"
+      link="https://www.linkedin.com/in/raymie-segars/"
+      btnText="Click here to visit"
+    />
   ),
   4: (
-    <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5">
-      Hi I am <span className="font-semibold">Raymie</span>👋
-      <br />
-      Explore the island to find my information
-    </h1>
+    <InfoBox
+      text="My Github"
+      link="https://github.com/raymiesegars"
+      btnText="Click here to visit"
+    />
   ),
 };
 
