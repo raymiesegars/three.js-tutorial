@@ -9,11 +9,6 @@ import Sky from "@/models/Sky";
 import Bird from "@/models/Bird";
 import Plane from "@/models/Plane";
 
-{
-  /* <Navbar />
-<div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center"></div> */
-}
-
 const HomePage = () => {
   const [isRotating, setIsRotating] = useState(false);
   const [currentStage, setCurrentStage] = useState(1);
@@ -54,7 +49,8 @@ const HomePage = () => {
 
   return (
     <section className="w-full h-screen relative">
-      {/* <Navbar /> */}
+      <Navbar />
+      <div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">Popup</div>
       <Canvas
         className={`w-full h-screen bg-transparent" ${isRotating ? "cursor-grabbing" : "cursor-grab"}`}
         camera={{ near: 0.1, far: 1000 }}
