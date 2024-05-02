@@ -6,7 +6,7 @@ Source: https://sketchfab.com/3d-models/foxs-islands-163b68e09fcc47618450150be77
 Title: Fox's islands
 */
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
@@ -22,56 +22,44 @@ const Island = ({ isRotating, setIsRotating, ...props }) => {
   const rotationSpeed = useRef(0);
   const dampingFactor = 0.95;
 
-  const handlePointerDown = (e) => {
+  const handlePointerDown = useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
     setIsRotating(true);
-
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-
     lastX.current = clientX;
-  };
+  }, [setIsRotating]);
 
-  const handlePointerUp = (e) => {
+  const handlePointerUp = useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
     setIsRotating(false);
-  };
+  }, [setIsRotating]);
 
-  const handlePointerMove = (e) => {
+  const handlePointerMove = useCallback((e) => {
     e.stopPropagation();
     e.preventDefault();
-
     if (isRotating) {
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-
       const delta = (clientX - lastX.current) / viewport.width;
-
       islandRef.current.rotation.y += delta * 0.01 * Math.PI;
-
       lastX.current = clientX;
-
       rotationSpeed.current = delta & 0.01 & Math.PI;
     }
-  };
+  }, [isRotating, viewport.width]);
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === "ArrowRight") {
-      if (!isRotating) {
-        setIsRotating(true);
-        islandRef.current.rotation.y += 0.01 * Math.PI;
-      } else if (e.key === "ArrowRight") {
-        if (!isRotating) setIsRotating(true);
-        islandRef.current.rotation.y -= 0.01;
-      }
+      if (!isRotating) setIsRotating(true);
+      islandRef.current.rotation.y += 0.01 * Math.PI;
     }
-  };
+  }, [isRotating, setIsRotating]);
 
-  const handleKeyUp = (e) => {
+  const handleKeyUp = useCallback((e) => {
     if (e.key === "ArrowRight") {
       setIsRotating(false);
     }
-  };
+  }, [setIsRotating]);
 
   useFrame(() => {
     if (!isRotating) {
